@@ -15,52 +15,72 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+      
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
+          cache: 'pip'
+      
       - name: Install Ruff
         run: |
           python -m pip install --upgrade pip
           pip install ruff
-
+      
       - name: Run Ruff linter
         run: ruff check .
 
   test:
     runs-on: ubuntu-latest
-
     steps:
+      - name: Free Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          df -h
+      
       - name: Checkout code
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+      
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Install Poetry
-        run: pip install poetry
-
-      - name: Cache Poetry and pip
+      
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      
+      - name: Add uv to PATH
+        run: echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      
+      - name: Cache uv dependencies
         uses: actions/cache@v4
         with:
           path: |
-            ~/.cache/pypoetry
-            ~/.cache/pip
-            ~/.local/share/pypoetry
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+            ~/.cache/uv
+            .venv
+          key: uv-${{ runner.os }}-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
           restore-keys: |
-            ${{ runner.os }}-poetry-
-
-      - name: Install dependencies only
-        run: poetry install --no-root
-
+            uv-${{ runner.os }}-
+      
+      - name: Create virtual environment and install dependencies
+        run: |
+          uv venv
+          uv sync
+      
       - name: Run unit tests
-        run: poetry run pytest tests/routes.py
+        run: uv run pytest tests/routes.py -v
+      
+      - name: Clean up
+        if: always()
+        run: |
+          rm -rf .venv
+          rm -rf ~/.cache/uv
