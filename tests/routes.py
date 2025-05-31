@@ -25,5 +25,5 @@ def test_face() -> None:
     """Test Face page."""
     client = app.test_client()
     response = client.get("/face")
-    assert response.status_code == 200  # noqa: S101, PLR2004
+    assert response.status_code == 200  
     assert b"Upload a photo to see face recognition results." in response.data  # noqa: S101
