@@ -31,26 +31,27 @@ class BaseFaceRecognition(ABC):
             for landmark_name in result["landmarks"]:
                 coords = result["landmarks"][landmark_name]
                 x, y = int(coords[0]), int(coords[1])
-                cv2.circle(img, (int(x), int(y)), 5, (255, 255, 255), 6)
-                cv2.circle(img, (int(x), int(y)), 5, (0, 255, 0), 4)
+                cv2.circle(img, (int(x), int(y)), 5, (255, 255, 255), 4)
+                cv2.circle(img, (int(x), int(y)), 5, (0, 255, 0), 3)
 
-            # connect each landmark to the nose with a line
-            for landmark_name in result["landmarks"]:
-                if landmark_name == "nose":
-                    continue
-                coords = result["landmarks"][landmark_name]
-                x, y = int(coords[0]), int(coords[1])
+            # eye and mouth landmarks with a line
+            eye_coords = result["landmarks"]["left_eye"], result["landmarks"]["right_eye"]
+            mouth_coords = result["landmarks"]["mouth_left"], result["landmarks"]["mouth_right"]
+
+            for vector in [eye_coords, mouth_coords]:
+                x0, y0 = int(vector[0][0]), int(vector[0][1])
+                x1, y1 = int(vector[1][0]), int(vector[1][1])
                 cv2.line(
                     img,
-                    (int(x), int(y)),
-                    (int(result["landmarks"]["nose"][0]), int(result["landmarks"]["nose"][1])),
+                    (int(x0), int(y0)),
+                    (int(x1), int(y1)),
                     (255, 255, 255),
                     3,
                 )
                 cv2.line(
                     img,
-                    (int(x), int(y)),
-                    (int(result["landmarks"]["nose"][0]), int(result["landmarks"]["nose"][1])),
+                    (int(x0), int(y0)),
+                    (int(x1), int(y1)),
                     (0, 255, 0),
                     2,
                 )
