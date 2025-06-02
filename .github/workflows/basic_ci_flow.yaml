@@ -14,6 +14,7 @@ on:
 
 jobs:
   lint:
+    name: Linting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -34,6 +35,7 @@ jobs:
         run: ruff check .
 
   test:
+    name: Unit Tests
     runs-on: ubuntu-latest
     steps:
       - name: Free Disk Space
