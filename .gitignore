@@ -9,7 +9,7 @@ results
 *.jpeg
 
 # Byte-compiled / optimized / DLL files
-__pycache__/ see you are still here... Fine. Upload a photo to see OCR results.
+__pycache__/
 *.pyc
 
 
