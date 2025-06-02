@@ -25,7 +25,7 @@ header {
     color: #ffffff;
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .header-tab:hover {
@@ -42,4 +42,31 @@ header {
 .home-icon:hover {
     color: #ccccff;
     cursor: pointer;
+}
+
+.site-footer {
+  width: 100%;
+  padding: 12px 0;
+  background-color: #f6f8fa;  
+  border-top: 1px solid #e1e4e8;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #24292e;
+}
+
+.site-footer a.footer-github-link {
+  color: #24292e;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.site-footer a.footer-github-link:hover {
+  color: #0366d6;
+}
+
+.site-footer svg {
+  fill: currentColor;
 }
